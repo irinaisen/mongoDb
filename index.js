@@ -5,6 +5,10 @@ const exphbs = require('express-handlebars');
 const app = express();
 require('dotenv').config();     //dotenv ei tule automaattisesti, vaatii tän
 
+
+//with this middleware we can get the data from HTML form
+app.use(express.urlencoded({extended: false}));
+
 app.engine('handlebars', exphbs.engine({
     defaultLayout: 'main'   /*,     //vähän epäturvallisempi tapa tehdä tämä
     runtimeOptions: {
@@ -134,3 +138,12 @@ app.get('/add-product', (req,res) => {
     res.render('add-product');
 })
 
+//Route for creating the resource
+app.post('/products', async (req,res) => {
+    const newProduct = new Product(req.body);
+    await newProduct.save();        //await tarvitaan kun on database funktio
+    res.send("<h1>Product Added</h1>");
+})
+
+//deleting a product ajax
+//delete, update resource projektissa
