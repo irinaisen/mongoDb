@@ -6,7 +6,11 @@ const app = express();
 require('dotenv').config();     //dotenv ei tule automaattisesti, vaatii tän
 
 app.engine('handlebars', exphbs.engine({
-    defaultLayout: 'main'
+    defaultLayout: 'main'   /*,     //vähän epäturvallisempi tapa tehdä tämä
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true
+    } */
 }));
 
 app.set('view engine', 'handlebars');
@@ -83,7 +87,7 @@ const getAll = async () => {
     res.render('index');
  });
 
-
+/* API
  app.get('/products', async (req,res) => {
     try {
         const result = await Product.find();
@@ -93,7 +97,25 @@ const getAll = async () => {
         console.log(error);
     }
 })
+*/
 
+//Create products webpage and list all the resources
+app.get('/products', async (req,res) => {
+    try {
+        const products = await Product.find();
+       // res.json(result);
+       res.render('products', {
+        title: 'Our products',
+        products: products.map(doc=> doc.toJSON())      // <- parempi keino näyttää tiedostot
+       })
+    }
+    catch (error) {
+        res.status(404),render('products', {
+            title: 'We got an error here'
+        })
+        console.log(error);
+    }
+})
 
 
 app.get('/products/:id', async (req,res) => {
