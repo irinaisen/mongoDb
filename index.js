@@ -118,8 +118,19 @@ app.get('/products', async (req,res) => {
 })
 
 
+
 app.get('/products/:id', async (req,res) => {
     const id = req.params.id;
     const product = await Product.findById(id);
     res.json(product);
 });
+
+
+//Create a document to mongodb. add to mongodb, submit data from web form
+
+//route for form page
+
+app.get('/add-product', (req,res) => {
+    res.render('add-product');
+})
+
